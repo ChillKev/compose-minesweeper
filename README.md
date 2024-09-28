@@ -7,11 +7,10 @@ A minesweeper game development with Kotlin Multiplatform, Compose Multiplatform 
 
 ## Run desktop application
 
+Require java 17
+
 ```
 ./gradlew run
 ```
 
-## Image resource
-
-- [pixabay](https://pixabay.com/)
-- [flaticon](https://www.flaticon.com/)
+## [Credits](./CREDITS.md)

@@ -1,33 +1,36 @@
 plugins {
-    id("org.jetbrains.compose") version "1.1.0"
     id("com.android.application")
     kotlin("android")
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
-group = "com.github.nian430.minesweeper"
-version = "1.0"
+group = "com.github.chillkev.minesweeper"
+version = "1.1"
 
 repositories {
 }
 
 dependencies {
     implementation(project(":common"))
-    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation(libs.activity.compose)
 }
 
 android {
-    compileSdk = 31
+    namespace = "com.github.chillkev.minesweeper.android"
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        applicationId = "com.github.nian430.minesweeper.android"
-        minSdk = 24
-        targetSdk = 31
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = "com.github.chillkev.minesweeper.android"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.compileSdk.get().toInt()
+        versionCode = 2
+        versionName = "1.1"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions.jvmTarget = "17"
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false

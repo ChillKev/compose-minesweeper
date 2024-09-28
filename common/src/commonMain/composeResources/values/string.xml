@@ -1,0 +1,17 @@
+<resources>
+    <string name="title">Minesweeper</string>
+    <string name="start_game">Start Game</string>
+    <string name="credits">Credits</string>
+    <string name="github">Github</string>
+    <string name="exit">Exit</string>
+    <string name="back">Back</string>
+    <string name="row">Row</string>
+    <string name="column">Column</string>
+    <string name="mine">Mine</string>
+    <string name="select_difficulty">Select Difficulty</string>
+    <string name="back_to_title">Back To Title</string>
+    <string name="stage_cleared">Stage Cleared</string>
+    <string name="game_over">Game Over</string>
+    <string name="new_high_score">New High Score</string>
+    <string name="try_again">Try Again</string>
+</resources>

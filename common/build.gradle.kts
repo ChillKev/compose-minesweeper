@@ -1,27 +1,38 @@
-import org.jetbrains.compose.compose
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "1.1.0"
     id("com.android.library")
-    id("com.squareup.sqldelight")
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.sqldelight.gradle)
 }
 
-group = "com.github.nian430.minesweeper"
-version = "1.0"
+group = "com.github.chillkev.minesweeper"
+version = "1.1"
 
 sqldelight {
-    database("MinesweeperDatabase") {
-        packageName = "com.github.nian430.minesweeper"
-        dialect = "sqlite:3.25"
+    databases {
+        create("MinesweeperDatabase") {
+            packageName.set("com.github.chillkev.minesweeper")
+            dialect(libs.sqldelight.dialects.sqlite)
+        }
     }
 }
 
 kotlin {
-    android()
+    androidTarget {
+        compilations.all {
+            compileTaskProvider {
+                compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+            }
+        }
+    }
     jvm("desktop") {
         compilations.all {
-            kotlinOptions.jvmTarget = "11"
+            compileTaskProvider {
+                compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+            }
         }
     }
     sourceSets {
@@ -30,8 +41,10 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-                implementation("com.squareup.sqldelight:coroutines-extensions:1.5.3")
+                api(libs.kotlinx.coroutines.core)
+                implementation(compose.components.resources)
+                implementation(libs.sqldelight.coroutines.extensions)
+                implementation(libs.sqldelight.primitive.adapters)
             }
         }
         val commonTest by getting {
@@ -41,20 +54,20 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("androidx.appcompat:appcompat:1.4.1")
-                api("androidx.core:core-ktx:1.7.0")
-                implementation("com.squareup.sqldelight:android-driver:1.5.3")
+                api(libs.appcompat)
+                api(libs.core.ktx)
+                implementation(libs.sqldelight.android.driver)
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
-                implementation("junit:junit:4.13.2")
+                implementation(libs.junit)
             }
         }
         val desktopMain by getting {
             dependencies {
                 api(compose.preview)
-                implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
+                implementation(libs.sqldelight.sqlite.driver)
             }
         }
         val desktopTest by getting
@@ -62,14 +75,16 @@ kotlin {
 }
 
 android {
-    compileSdk = 31
+    namespace = "com.github.chillkev.minesweeper.common"
+    compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdk = 24
-        targetSdk = 31
+        minSdk = libs.versions.minSdk.get().toInt()
+        testOptions.targetSdk = libs.versions.compileSdk.get().toInt()
+        lint.targetSdk = libs.versions.compileSdk.get().toInt()
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
